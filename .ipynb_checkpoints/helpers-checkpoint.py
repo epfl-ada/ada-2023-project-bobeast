@@ -19,13 +19,14 @@ def process_topics_linked(topics_linked):
     tl[tl.columns[idx]]=tl[tl.columns[idx]].astype(int)
     return tl
 
-def process_agg_time_series(agg_ts):
+def process_agg_time_series(agg_ts, col_label='sum'):
     res=pd.DataFrame()
     if len(agg_ts.values())==3:
         res=pd.DataFrame(agg_ts)
     else:
         res=pd.DataFrame(agg_ts.values())
         res.index=agg_ts.keys()
+        res=res.rename(columns={0 : col_label})
     res.index=pd.to_datetime(res.index)
     res['date']=res.index
     res['year']=res['date'].dt.year
