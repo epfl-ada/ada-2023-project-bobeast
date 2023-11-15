@@ -33,6 +33,14 @@ Maslow's Hierarchy of Needs serves as a model for assessing human behavior, offe
 - **Difference-in-Differences Analysis:**
    - Our examination will explore the changing levels of interest in the categorized topics, correlating with significant timestamps (lockdown, first death, etc). These patterns will be linked to corresponding human needs [1].
    
+## Proposed Timeline
+
+The first step will be to categorize the data, breaking it down in the five categories aligned with the five needs of Maslow's hierarchy of needs. The data coming from different datasets will be merged into five dataframes, to be further analyzed separatly.
+
+A difference in differences analysis and other time dependent analysis will be performed to quantify changes regarding the needs of people before and after the pandemic
+
+A conclusive analysis to redefine the pyramid of needs after normalising the changes in each category of needs to be comparable to each other.
+
 ![Cat](pyramid-data.png)
 
 
