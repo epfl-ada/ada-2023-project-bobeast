@@ -32,6 +32,9 @@ Maslow's Hierarchy of Needs serves as a model for assessing human behavior, offe
 
 - **Difference-in-Differences Analysis:**
    - Our examination will explore the changing levels of interest in the categorized topics, correlating with significant timestamps (lockdown, first death, etc). These patterns will be linked to corresponding human needs [1].
+   
+![Cat](pyramid-data.png)
+
 
 ## References
 
