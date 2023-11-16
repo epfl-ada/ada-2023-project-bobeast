@@ -75,6 +75,7 @@ Conduct a comprehensive analysis to redefine the hierarchy of needs, normalizing
 
 ## References
 
-[1] Jina Suh, Eric Horvitz, Ryen W. White, Tim Althof (2021). Population-Scale Study of Human Needs During the COVID-19 Pandemic: Analysis and Implications
+[1] Jina Suh, Eric Horvitz, Ryen W. White, Tim Althof (2021). Population-Scale Study of Human Needs During the COVID-19 Pandemic: Analysis and Implications <br>
+
 [2] Maslow’s safety needs: Examples &amp; definition - study.com. Available at: https://study.com/academy/lesson/maslows-safety-needs-examples-definition-quiz.html
 
