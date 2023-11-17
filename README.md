@@ -48,6 +48,7 @@ Both procedures indicated that, on a per-topic basis, as well as for general pag
 ## Proposed Timeline
 
 An exploratory data analysis performed on the data sets that were chosen, mostly completed in milestone 2.
+
 **Step 1: Categorize Wikipedia Topics**
 
 Associate each Wikipedia topic with one of Maslow's Pyramid levels, primarily focusing on Self-Actualization, Esteem, and Love and Belonging.
@@ -74,8 +75,7 @@ Conduct a comprehensive analysis to redefine the hierarchy of needs, normalizing
 ![Cat](pyramid-data.png)
 
 ## Organisation
-Our repository will consist of two ipynb files. The helpers ipynb which consists of functions that can be applied to all datasets to format them in a usable shape and form. The Project main file which consists for now of the initial exploratory data analysis that is performed in the scope of milestone 2.
-
+Our repository will consist of two ipynb files. The helpers which consists of functions that can be applied to all datasets to format them in a usable shape and form. The Project main file which consists for now of the initial exploratory data analysis that is performed in the scope of milestone 2.
 
 ## References
 
