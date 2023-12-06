@@ -74,3 +74,31 @@ def process_eu_unemployment(dfeu,countries):
     dfts['Month']=dfts['Date'].dt.month
     
     return dfts
+
+## General pipeline for processing the aforementionned data
+def unemployment_across_groups(dfts,test_group,size=(12,18)):
+    #devide dataset between different metrics
+    df_percentage=dfts[dfts['unit']=='PC_ACT'].drop(columns='unit').copy()
+    df_numeric=dfts[~(dfts['unit']=='PC_ACT')].drop(columns='unit').copy()
+    #compile data needed for graph generation
+    generals=[df_percentage,df_numeric]
+    ylabels=['Unemployment Percentage','Unemployed People (x1000)']
+    #Generate plot with two pannels 
+    fig,axs=plt.subplots(2,1,figsize=size)
+    #Iterate over each metric dataset
+    for i in range(len(generals)):
+        #Select metric
+        df=generals[i]
+        #Aggregate by testing group and Date to get monthly mean 
+        df_agg=df.groupby([test_group,'Date']).mean(numeric_only=True)['Value'].copy()
+        #'Flatten' the indeces to get only one index column corresponding to the testing group
+        df_agg=df_agg.reset_index(level='Date')
+        #Plot the different lines for each of the testing group elements
+        for idx in df_agg.index.unique(): 
+            axs[i].plot(df_agg.loc[idx]['Date'],df_agg.loc[idx]['Value'],label=idx)
+        #Add details to the plot
+        axs[i].legend()
+        axs[i].set_xlabel('Date')
+        axs[i].set_ylabel(ylabels[i])
+        axs[i].set_title(f'{ylabels[i]} per {test_group} across Europe')
+    plt.show()
