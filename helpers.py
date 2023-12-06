@@ -75,6 +75,13 @@ def process_eu_unemployment(dfeu,countries):
     
     return dfts
 
+
+def process_group_df(df,test_group):
+    df=df.reset_index().copy()
+    df[test_group]=df[test_group].astype('category')
+    df['lockdown']=np.where(df['Date']>=datetime(2020,3,1),1,0)
+    return df
+
 ## General pipeline for processing the aforementionned data
 def unemployment_across_groups(dfts,test_group,size=(12,18)):
     #devide dataset between different metrics
@@ -84,8 +91,9 @@ def unemployment_across_groups(dfts,test_group,size=(12,18)):
     generals=[df_percentage,df_numeric]
     ylabels=['Unemployment Percentage','Unemployed People (x1000)']
     #Generate plot with two pannels 
-    fig,axs=plt.subplots(2,1,figsize=size)
+    fig,axs=plt.subplots(2,1,figsize=size,sharex=True)
     #Iterate over each metric dataset
+    results=[]
     for i in range(len(generals)):
         #Select metric
         df=generals[i]
@@ -97,8 +105,12 @@ def unemployment_across_groups(dfts,test_group,size=(12,18)):
         for idx in df_agg.index.unique(): 
             axs[i].plot(df_agg.loc[idx]['Date'],df_agg.loc[idx]['Value'],label=idx)
         #Add details to the plot
-        axs[i].legend()
+        axs[i].axvline(x=datetime(2020,3,1),color='red', linestyle='--', label='Lockdown')
+        axs[i].legend(loc='upper left')
         axs[i].set_xlabel('Date')
         axs[i].set_ylabel(ylabels[i])
         axs[i].set_title(f'{ylabels[i]} per {test_group} across Europe')
+        df_agg=process_group_df(df_agg,test_group)
+        results.append(df_agg)
     plt.show()
+    return results
