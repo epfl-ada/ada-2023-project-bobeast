@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import scipy.stats as stats
+import plotly.express as px
+from datetime import datetime
+import statsmodels.formula.api as smf
 import re
 
 
@@ -46,10 +49,7 @@ def process_eu_unemployment(dfeu,countries):
     #remove unwanted years
     selected_cols = ['C2','age','unit','sex', 's_adj', 
                      '2020M07 ', '2020M06 ', '2020M05 ', '2020M04 ','2020M03 ','2020M02 ','2020M01 ',
-                     '2019M12 ','2019M11 ','2019M10 ','2019M09 ','2019M08 ','2019M07 ',
-                     '2019M06 ','2019M05 ','2019M04 ','2019M03 ','2019M02 ','2019M01 ',
-                     '2018M12 ','2018M11 ','2018M10 ','2018M09 ','2018M08 ','2018M07 ',
-                     '2018M06 ','2018M05 ','2018M04 ','2018M03 ','2018M02 ','2018M01 ',]
+                     '2019M12 ','2019M11 ']
     dfeuc = dfeuc[selected_cols]
     #remove NSA rows
     dfeuc.drop(dfeuc.loc[dfeuc['s_adj'] !='SA'].index, inplace=True)
@@ -90,8 +90,6 @@ def unemployment_across_groups(dfts,test_group,size=(12,18)):
     #compile data needed for graph generation
     generals=[df_percentage,df_numeric]
     ylabels=['Unemployment Percentage','Unemployed People (x1000)']
-    #Generate plot with two pannels 
-    fig,axs=plt.subplots(2,1,figsize=size,sharex=True)
     #Iterate over each metric dataset
     results=[]
     for i in range(len(generals)):
@@ -102,15 +100,36 @@ def unemployment_across_groups(dfts,test_group,size=(12,18)):
         #'Flatten' the indeces to get only one index column corresponding to the testing group
         df_agg=df_agg.reset_index(level='Date')
         #Plot the different lines for each of the testing group elements
-        for idx in df_agg.index.unique(): 
-            axs[i].plot(df_agg.loc[idx]['Date'],df_agg.loc[idx]['Value'],label=idx)
+        if(i==0):
+            plt.figure(figsize=size)
+            plt.axvline(x=datetime(2020,3,1),color='red', linestyle='--', label='Lockdown')
+            for idx in df_agg.index.unique(): 
+                plt.plot(df_agg.loc[idx]['Date'],df_agg.loc[idx]['Value'],label=idx)
         #Add details to the plot
-        axs[i].axvline(x=datetime(2020,3,1),color='red', linestyle='--', label='Lockdown')
-        axs[i].legend(loc='upper left')
-        axs[i].set_xlabel('Date')
-        axs[i].set_ylabel(ylabels[i])
-        axs[i].set_title(f'{ylabels[i]} per {test_group} across Europe')
+                plt.legend(loc='upper left')
+                plt.xlabel('Date')
+                plt.ylabel(ylabels[i])
+                plt.title(f'{ylabels[i]} per {test_group} across Europe')
         df_agg=process_group_df(df_agg,test_group)
         results.append(df_agg)
     plt.show()
     return results
+
+def regression_helper(df,group):
+    model=smf.ols(data=df,formula=f'Value~{group}:lockdown')
+    res=model.fit()
+    return res
+
+def plot_pies(df,group,total):
+    dfs=[df[(df['lockdown']==0)],df[(df['lockdown']==1)]]
+    fig, axs=plt.subplots(1,2)
+    titles=['Inactive Population Before Lockdown','Inactive Population After Lockdown']
+    for i in range(len(dfs)):
+        df_pie=dfs[i].copy()
+        df_pie=df_pie[df_pie[group]!='TOTAL']
+        df_pie=df_pie.groupby(group).sum().drop(total)
+        labels=list((df_pie.index))
+        axs[i].pie(df_pie['Value'].astype(float).values,labels=labels)
+        axs[i].set_title(titles[i])
+    fig.tight_layout()
+    plt.show()
