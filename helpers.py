@@ -146,6 +146,26 @@ def split_group(df, startct, endct, starttr, endtr, datetrct, datetrtr):
     dff = dff[['Date','Value','g','t','gt']]
     return dff
 
+def split_group2(df, startct, endct, starttr, endtr, datetrct, datetrtr):
+    #split control and treatment
+    df_ct = df[df['Date'] <= endct]
+    df_ct = df_ct[df_ct['Date'] >= startct]
+    df_t = df[df['Date'] <= endtr]
+    df_t = df_t[df_t['Date'] >= starttr]
+    #add group and "reatment date" columns
+    df_ct['g'] = 0
+    df_t['g'] = 1
+    df_ct['t'] = (df['Date'] >= datetrct).astype(int)
+    df_t['t'] = (df['Date'] >= datetrtr).astype(int)
+    dff = pd.concat([df_ct, df_t])
+    #interaction between group and treatment
+    dff['gt'] = dff['g']*dff['t']
+
+
+    #keep only relevant columns
+    dff = dff[['Date','Value','g','t','gt']]
+    return dff
+
 def regression_helper(df,group):
     model=smf.ols(data=df,formula=f'Value~{group}:lockdown')
     res=model.fit()
