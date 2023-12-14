@@ -39,7 +39,7 @@ def process_agg_time_series(agg_ts, col_label='sum'):
     res.index=range(len(res))
     return res
 
-def process_eu_unemployment(dfeu,countries):
+def process_eu_unemployment(dfeu,countries,params):
     dfeuc = dfeu.copy()
     dfeuc['C2'] = dfeu['s_adj,age,unit,sex,geo\\time'].apply(lambda x: x.split(",")[-1])
     dfeuc['age'] = dfeu['s_adj,age,unit,sex,geo\\time'].apply(lambda x: x.split(",")[1])
@@ -47,9 +47,15 @@ def process_eu_unemployment(dfeu,countries):
     dfeuc['sex'] = dfeu['s_adj,age,unit,sex,geo\\time'].apply(lambda x: x.split(",")[3])
     dfeuc['s_adj'] = dfeu['s_adj,age,unit,sex,geo\\time'].apply(lambda x: x.split(",")[0])
     #remove unwanted years
-    selected_cols = ['C2','age','unit','sex', 's_adj', 
-                     '2020M07 ', '2020M06 ', '2020M05 ', '2020M04 ','2020M03 ','2020M02 ','2020M01 ',
-                     '2019M12 ','2019M11 ']
+    if (params==0):
+        selected_cols = ['C2','age','unit','sex', 's_adj', 
+                        '2020M07 ', '2020M06 ', '2020M05 ', '2020M04 ','2020M03 ','2020M02 ','2020M01 ',
+                        '2019M12 ','2019M11 ']
+    elif (params==1):
+        selected_cols = ['C2','age','unit','sex', 's_adj', 
+                        '2020M07 ', '2020M06 ', '2020M05 ', '2020M04 ','2020M03 ','2020M02 ','2020M01 ',
+                        '2019M12 ','2019M11 ', '2019M10 ', '2019M09 ', '2019M08 ', '2019M07 ', '2019M06 ', '2019M05 ',
+                        '2019M04 ', '2019M03 ', '2019M02 ', '2019M01 ']
     dfeuc = dfeuc[selected_cols]
     #remove NSA rows
     dfeuc.drop(dfeuc.loc[dfeuc['s_adj'] !='SA'].index, inplace=True)
