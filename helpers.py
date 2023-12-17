@@ -184,3 +184,236 @@ def plot_pies(df,group,total):
         axs[i].set_title(titles[i])
     fig.tight_layout()
     plt.show()
+
+def plot_df(df, y_label, title) :
+
+    """
+    Plots multiple lineplots in one figure using the data withing the 'df' dataframe
+
+    """
+
+    itLockdown = '2020-03-01'
+    itNormalcy = '2020-07-01'
+    it1stCase = '2020-02-01'
+
+    dates = df['Timestamp'].values.copy()
+    dates = pd.to_datetime(dates)
+
+    topics = df.columns[1:]
+
+    # Format to display only year-month-day
+    dates = dates.strftime('%Y-%m-%d')
+
+
+    plt.figure(figsize=(20, 10))
+    for topic in topics :
+        sns.lineplot(x=dates, y=df[topic].values, errorbar=None)
+        
+    plt.xticks(rotation=90)
+    plt.xlabel('Dates (From 2019-01-01 to 2020-08-01)')
+
+    # Creating 3 vertical lines, indicating the when the interventions (Lockdown, Normalcy and 1st Case)
+    plt.axvline(x=itLockdown,color='red', linestyle='--', label='Lockdown')
+    plt.axvline(x=itNormalcy,color='green', linestyle='--', label='Normalcy')
+    plt.axvline(x=it1stCase,color='black', linestyle='--', label='1st Death')
+
+    plt.ylabel(y_label)
+    plt.title(title)
+    plt.grid(color='black', linestyle='dotted', linewidth=0.75)
+    plt.legend()
+    plt.show()    
+
+def rel_change_from_baseline (df) :
+    """
+    Creates and returns a new dataframe containing the relative change from baseline rather
+    than the number of pageviews
+    Adds a column 'avg' containing the average over the different columns
+    
+    """
+    topics = df.columns[1:]
+    baselines = df.iloc[0][1:].values
+    
+    dfCopy = df.copy()
+
+    for index in range(len(baselines)) :
+        dfCopy[topics[index]] = 100*(dfCopy[topics[index]] - baselines[index])/baselines[index]
+
+
+    row_avg = dfCopy.iloc[:, 1:].mean(axis=1)
+    dfCopy['avg'] = row_avg
+    
+    return dfCopy
+
+def sum_pageviews(df) :
+    """
+    Creates and returns a new dataframe containing the sum of all the pageviews
+    Adds a column 'avg' containing the average over the different columns
+    
+    """
+    topics = df.columns[1:]
+    dfCopy = pd.DataFrame()
+    dfCopy['Timestamp'] = df['Timestamp']
+    dfCopy['sum'] = df[topics].sum(axis=1)
+    
+    return dfCopy
+    
+
+def filter_outlier (df, thresh) :
+    """
+    Function that filters out outliers 
+
+    """
+    
+    dfCopy = df.copy()
+    timestamps = dfCopy['Timestamp']
+
+    # Identify columns where the maximum value is under 10,000
+    columns_to_keep = dfCopy.drop('Timestamp', axis=1).columns[dfCopy.drop('Timestamp', axis=1).max() < thresh]
+
+    # Filter the DataFrame based on identified columns
+    filtered_columns = dfCopy.loc[:, list(columns_to_keep)]
+
+    print('A7a')
+    # Display the result
+    dfFinal = pd.concat([timestamps, filtered_columns], axis=1)
+
+    if (dfFinal.columns[-1] == 'avg') :
+        dfFinal['avg'] = dfFinal.iloc[:, 1:-1].mean(axis = 1)
+
+    return (dfFinal)
+
+def get_dfs(maslow_level):
+    dfs = {
+        "it": [], 
+        "cs": [],
+        "ro": [],
+        "sv": [],
+        "fi": [],
+        "da": [],
+        }
+    lan = ['it', 'cs', 'ro', 'sv', 'fi', 'da']
+    for i in lan:
+        df = pd.read_csv(f'Wiki-pageviews/{maslow_level}/{maslow_level}_pageviews_{i}.csv')
+        dfs[i] = df
+    
+    return dfs
+
+def plot_df_countries (dfs, yLabel, title) :
+
+    itLockdown = '2020-03-01'
+    itNormalcy = '2020-07-01'
+    it1stCase = '2020-02-01'
+
+    # Region code of the different countries
+    lan = ['it', 'cs', 'ro', 'sv', 'fi', 'da']
+
+    # Name of the countries
+    countries = ['Italy', 'Serbia', 'Romania', 'Slovenia', 'Finland', 'Denmark']
+    
+    # Get timestamps
+    dates = dfs['it']['Timestamp'].values
+
+    # Figure contains 2x3 (12) subplots, one for each european country that we will be analyzing 
+    fig, axs= plt.subplots(2, 3, sharey=True, sharex=True, figsize=(14,10))
+
+    # Iterate over every country in the 'euroCountries' array
+    for i, country in enumerate(countries) :
+
+        # Retrieve Dataframe Corresponding to the country
+        dfCurrent = dfs[lan[i]].copy()
+
+        # Proper index formating to be at the right plot
+        ax = axs[i//3, i%3]
+
+        topics = dfCurrent.columns[1:]
+
+        # Format to display only year-month-day
+        # dates = dates.strftime('%Y-%m-%d')
+
+        for topic in topics :
+            sns.lineplot(x=dates, y=dfCurrent[topic].values, errorbar=None, ax=ax)
+
+        ax.set_xticklabels(labels= dates,rotation=90) 
+            
+        ax.axvline(x=itLockdown,color='red', linestyle='--', label='Lockdown')
+        ax.axvline(x=itNormalcy,color='green', linestyle='--', label='Normalcy')
+        ax.axvline(x=it1stCase,color='black', linestyle='--', label='1st Death')
+           
+        ax.set_title(f'Evolution in {country}')
+        ax.grid(True)
+
+    # Adding general titles to the x and y-axis
+    fig.text(0.5, 0.001, 'Dates (From 2019-01-01 to 2020-08-01)', ha='center',
+            va='center', fontsize=14)
+    fig.text(0.05, 0.5, yLabel, ha='center',
+            va='center', rotation='vertical', fontsize=14)
+
+    # Addjusting figure formatting
+    # plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
+
+    # Adding a general title
+    plt.suptitle(title, fontsize=16)
+    plt.legend()
+    plt.show()
+
+def plot_df_countries_avg (dfs, yLabel, title) :
+
+    itLockdown = '2020-03-01'
+    itNormalcy = '2020-07-01'
+    it1stCase = '2020-02-01'
+
+    # Region code of the different countries
+    lan = ['it', 'cs', 'ro', 'sv', 'fi', 'da']
+
+    # Name of the countries
+    countries = ['Italy', 'Serbia', 'Romania', 'Slovenia', 'Finland', 'Denmark']
+    
+    # Get timestamps
+    dates = dfs['it']['Timestamp'].values
+
+    # Figure contains 2x3 (12) subplots, one for each european country that we will be analyzing 
+    fig, axs= plt.subplots(2, 3, sharey=True, sharex=True, figsize=(14,10))
+
+    # Iterate over every country in the 'euroCountries' array
+    for i, country in enumerate(countries) :
+
+        # Retrieve Dataframe Corresponding to the country
+        dfCurrent = dfs[lan[i]].copy()
+
+        # Proper index formating to be at the right plot
+        ax = axs[i//3, i%3]
+
+        topics = dfCurrent.columns[1:]
+
+        # Format to display only year-month-day
+        # dates = dates.strftime('%Y-%m-%d')
+
+        for topic in topics :
+            sns.lineplot(x=dates, y=dfCurrent['avg'].values, errorbar=None, ax=ax)
+            
+        ax.set_xticklabels(labels= dates,rotation=90)
+
+        ax.axvline(x=itLockdown,color='red', linestyle='--', label='Lockdown')
+        ax.axvline(x=itNormalcy,color='green', linestyle='--', label='Normalcy')
+        ax.axvline(x=it1stCase,color='black', linestyle='--', label='1st Death')
+            
+        ax.set_title(f'Evolution for {country}')
+        ax.grid(True)
+
+    # Adding general titles to the x and y-axis
+    fig.text(0.5, 0.001, 'Dates (From 2019-01-01 to 2020-08-01)', ha='center',
+            va='center', fontsize=14)
+    fig.text(0.05, 0.5, yLabel, ha='center',
+            va='center', rotation='vertical', fontsize=14)
+
+    # Addjusting figure formatting
+    # plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
+
+    # Adding a general title
+    plt.suptitle(title, fontsize=16)
+    plt.legend()
+    plt.show()
+    
+    
