@@ -210,15 +210,15 @@ def plot_df(df, y_label, title) :
         sns.lineplot(x=dates, y=df[topic].values, errorbar=None)
         
     plt.xticks(rotation=90)
-    plt.xlabel('Dates (From 2019-01-01 to 2020-08-01)')
+    plt.xlabel('Dates (From 2019-01-01 to 2020-08-01)', fontsize = 14)
 
     # Creating 3 vertical lines, indicating the when the interventions (Lockdown, Normalcy and 1st Case)
     plt.axvline(x=itLockdown,color='red', linestyle='--', label='Lockdown')
     plt.axvline(x=itNormalcy,color='green', linestyle='--', label='Normalcy')
     plt.axvline(x=it1stCase,color='black', linestyle='--', label='1st Death')
 
-    plt.ylabel(y_label)
-    plt.title(title)
+    plt.ylabel(y_label, fontsize = 14)
+    plt.title(title, fontsize = 18)
     plt.grid(color='black', linestyle='dotted', linewidth=0.75)
     plt.legend()
     plt.show()    
@@ -273,16 +273,23 @@ def filter_outlier (df, thresh) :
     # Filter the DataFrame based on identified columns
     filtered_columns = dfCopy.loc[:, list(columns_to_keep)]
 
-    print('A7a')
     # Display the result
     dfFinal = pd.concat([timestamps, filtered_columns], axis=1)
 
-    if (dfFinal.columns[-1] == 'avg') :
+    if (dfCopy.columns[-1] == 'avg') :
         dfFinal['avg'] = dfFinal.iloc[:, 1:-1].mean(axis = 1)
 
     return (dfFinal)
 
 def get_dfs(maslow_level):
+    """
+    Returns a structure variable 'dfs' containing a pageview dataframe in each field,
+    corresponding to a specific country.
+
+    Input : String indicating the Maslow level folder name that's being accessed in order to retrieve the 
+            CSV files from which we will generate the datafarames 
+    
+    """
     dfs = {
         "it": [], 
         "cs": [],
@@ -299,6 +306,10 @@ def get_dfs(maslow_level):
     return dfs
 
 def plot_df_countries (dfs, yLabel, title) :
+    """
+    Plots lineplots for each column of the given dataframe
+
+    """
 
     itLockdown = '2020-03-01'
     itNormalcy = '2020-07-01'
@@ -344,16 +355,16 @@ def plot_df_countries (dfs, yLabel, title) :
 
     # Adding general titles to the x and y-axis
     fig.text(0.5, 0.001, 'Dates (From 2019-01-01 to 2020-08-01)', ha='center',
-            va='center', fontsize=14)
+            va='center', fontsize=10)
     fig.text(0.05, 0.5, yLabel, ha='center',
-            va='center', rotation='vertical', fontsize=14)
+            va='center', rotation='vertical', fontsize=10)
 
     # Addjusting figure formatting
     # plt.tight_layout()
     plt.subplots_adjust(top=0.9)
 
     # Adding a general title
-    plt.suptitle(title, fontsize=16)
+    plt.suptitle(title, fontsize=14)
     plt.legend()
     plt.show()
 
@@ -403,17 +414,63 @@ def plot_df_countries_avg (dfs, yLabel, title) :
 
     # Adding general titles to the x and y-axis
     fig.text(0.5, 0.001, 'Dates (From 2019-01-01 to 2020-08-01)', ha='center',
-            va='center', fontsize=14)
+            va='center', fontsize=10)
     fig.text(0.05, 0.5, yLabel, ha='center',
-            va='center', rotation='vertical', fontsize=14)
+            va='center', rotation='vertical', fontsize=10)
 
     # Addjusting figure formatting
     # plt.tight_layout()
     plt.subplots_adjust(top=0.9)
 
     # Adding a general title
-    plt.suptitle(title, fontsize=16)
+    plt.suptitle(title, fontsize=14)
     plt.legend()
     plt.show()
+
+def one_plot_avg (dfs, title) :
+    """
+    Plots multiple lineplots in one figure using the 'avg' column of each dataframe within the
+    structure dfs (with specific labeling).
+
+    """
+
+    # Region code of the different countries
+    lan = ['it', 'cs', 'ro', 'sv', 'fi', 'da']
+
+    # Name of the countries
+    countries = ['Italy', 'Serbia', 'Romania', 'Slovenia', 'Finland', 'Denmark']
+
+    itLockdown = '2020-03-01'
+    itNormalcy = '2020-07-01'
+    it1stCase = '2020-02-01'
+
+    dates = dfs['it']['Timestamp'].values.copy()
+    dates = pd.to_datetime(dates)
+
+
+    # Format to display only year-month-day
+    dates = dates.strftime('%Y-%m-%d')
+
+
+    plt.figure(figsize=(20, 10))
+
+    for i, country in enumerate(countries) :
+        sns.lineplot(x=dates, y=dfs[lan[i]]['avg'].values, errorbar=None, label=country)
+    
+    # Creating 3 vertical lines, indicating the when the interventions (Lockdown, Normalcy and 1st Case)
+    plt.axvline(x=itLockdown,color='red', linestyle='--', label='Lockdown')
+    plt.axvline(x=itNormalcy,color='green', linestyle='--', label='Normalcy')
+    plt.axvline(x=it1stCase,color='black', linestyle='--', label='1st Death')
+
+    plt.grid(color='black', linestyle='dotted', linewidth=0.75)
+    
+    plt.xticks(rotation=90)
+    plt.xlabel('Dates (From 2019-01-01 to 2020-08-01)', fontsize = 14)
+    plt.ylabel('Average Relative Percentage Change from Baseline', fontsize = 14)
+    plt.title(title, fontsize = 18)
+    
+    plt.legend()
+    plt.show()    
+
     
     
