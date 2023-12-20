@@ -132,7 +132,7 @@ def split_group(df, startct, endct, starttr, endtr, datetrct, datetrtr):
     df_t['g'] = 1
     df_ct['t'] = (df['Date'] >= datetrct).astype(int)
     df_t['t'] = (df['Date'] >= datetrtr).astype(int)
-    dff = pd.concat([df_ct, df_t])
+    dff = pd.concat([df_t, df_ct])
     #interaction between group and treatment
     dff['gt'] = dff['g']*dff['t']
 
