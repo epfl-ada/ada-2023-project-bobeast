@@ -79,9 +79,13 @@ Our repository will consist of two ipynb files. The helpers which consists of fu
 
 ## Work Repartition
 Aly:
+
 Ellen:
+
 Kamal: Preliminary Data Analysis (Italy case study). EU Unemployment Analysis.
+
 Nico:
+
 Oussama:
 ## References
 
