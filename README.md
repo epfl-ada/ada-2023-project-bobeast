@@ -84,7 +84,7 @@ Ellen:
 
 Kamal: Preliminary Data Analysis (Italy case study). EU Unemployment Analysis.
 
-Nico:
+Nico: Preliminary EU unemployment Analysis, Difference in Differences for apple mobility, EU Unemployment and wikipedia pageviews concerning Self-actualization, Love and Belonging and Esteem.
 
 Oussama:
 ## References
