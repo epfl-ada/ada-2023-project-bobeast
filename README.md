@@ -77,6 +77,12 @@ Conduct a comprehensive analysis to redefine the hierarchy of needs, normalizing
 ## Organisation
 Our repository will consist of two ipynb files. The helpers which consists of functions that can be applied to all datasets to format them in a usable shape and form. The Project main file which consists for now of the initial exploratory data analysis that is performed in the scope of milestone 2.
 
+## Work Repartition
+Aly:
+Ellen:
+Kamal: Preliminary Data Analysis (Italy case study). EU Unemployment Analysis.
+Nico:
+Oussama:
 ## References
 
 [1] Jina Suh, Eric Horvitz, Ryen W. White, Tim Althof (2021). Population-Scale Study of Human Needs During the COVID-19 Pandemic: Analysis and Implications <br>
