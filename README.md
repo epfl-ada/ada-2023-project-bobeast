@@ -93,3 +93,5 @@ Oussama:
 
 [2] Maslow’s safety needs: Examples &amp; definition - study.com. Available at: https://study.com/academy/lesson/maslows-safety-needs-examples-definition-quiz.html
 
+# Data story Link
+https://kamalnour.github.io/adatastory/
