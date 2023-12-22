@@ -80,7 +80,7 @@ Our repository will consist of two ipynb files. The helpers which consists of fu
 ## Work Repartition
 Aly: Preliminary Data Analysis of of Apple Mobility Trends Dataset and of Web-Scraped Pageview Datasets. Multiple European Countries.
 
-Ellen: General Scope of project, Goo
+Ellen: General Scope of project, Global mobility report analysis, Google Trends analysis for Physiological needs
 
 Kamal: Preliminary Data Analysis (Italy case study). EU Unemployment Analysis.
 
@@ -93,3 +93,5 @@ Oussama: Web-scrapping of pageview count in different countries of the top three
 
 [2] Maslow’s safety needs: Examples &amp; definition - study.com. Available at: https://study.com/academy/lesson/maslows-safety-needs-examples-definition-quiz.html
 
+# Data story Link
+https://kamalnour.github.io/adatastory/
