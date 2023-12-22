@@ -80,7 +80,7 @@ Our repository will consist of two ipynb files. The helpers which consists of fu
 ## Work Repartition
 Aly: Preliminary Data Analysis of of Apple Mobility Trends Dataset and of Web-Scraped Pageview Datasets. Multiple European Countries.
 
-Ellen:
+Ellen: General Scope of project, Global mobility report analysis, Google Trends analysis for Physiological needs
 
 Kamal: Preliminary Data Analysis (Italy case study). EU Unemployment Analysis.
 
