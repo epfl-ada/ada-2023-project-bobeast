@@ -78,7 +78,7 @@ Conduct a comprehensive analysis to redefine the hierarchy of needs, normalizing
 Our repository will consist of two ipynb files. The helpers which consists of functions that can be applied to all datasets to format them in a usable shape and form. The Project main file which consists for now of the initial exploratory data analysis that is performed in the scope of milestone 2.
 
 ## Work Repartition
-Aly:
+Aly: Preliminary Data Analysis of of Apple Mobility Trends Dataset and of Web-Scraped Pageview Datasets. Multiple European Countries.
 
 Ellen:
 
