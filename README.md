@@ -86,7 +86,7 @@ Kamal: Preliminary Data Analysis (Italy case study). EU Unemployment Analysis.
 
 Nico: Preliminary EU unemployment Analysis, Difference in Differences for apple mobility, EU Unemployment and wikipedia pageviews concerning Self-actualization, Love and Belonging and Esteem.
 
-Oussama:
+Oussama: Web-scrapping of pageview count in different countries of the top three levels in Maslow's hierarchy.
 ## References
 
 [1] Jina Suh, Eric Horvitz, Ryen W. White, Tim Althof (2021). Population-Scale Study of Human Needs During the COVID-19 Pandemic: Analysis and Implications <br>
