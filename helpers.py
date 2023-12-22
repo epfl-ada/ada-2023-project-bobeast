@@ -473,4 +473,100 @@ def one_plot_avg (dfs, title) :
     plt.show()    
 
     
-    
+def plot_df_countries_px (dfs, yLabel, title):
+    """
+    Plots lineplots for each column of the given dataframe using Plotly Express
+    """
+
+    itLockdown = '2020-03-01'
+    itNormalcy = '2020-07-01'
+    it1stCase = '2020-02-01'
+
+    # Region code of the different countries
+    lan = ['it', 'cs', 'ro', 'sv', 'fi', 'da']
+
+    # Name of the countries
+    countries = ['Italy', 'Serbia', 'Romania', 'Slovenia', 'Finland', 'Denmark']
+
+    # Get timestamps
+    dates = dfs['it']['Timestamp'].values
+
+    # Create a DataFrame for Plotly Express
+    plotly_df = pd.DataFrame()
+
+    for i, country in enumerate(countries):
+        dfCurrent = dfs[lan[i]].copy()
+
+        for topic in dfCurrent.columns[1:]:
+            plotly_df = pd.concat([plotly_df, pd.DataFrame({'Dates': dates, 'Values': dfCurrent[topic].values, 'Country': country, 'Topic': topic})])
+
+    # Plot using Plotly Express
+    fig = px.line(plotly_df, x='Dates', y='Values', color='Country', line_group='Topic',
+                  labels={'Values': yLabel, 'Dates': 'Dates (From 2019-01-01 to 2020-08-01)'}, 
+                  title=title, facet_col='Country', facet_col_wrap=3)
+
+    # Highlight important dates
+    fig.add_shape(dict(type="line", x0=itLockdown, x1=itLockdown, y0=0, y1=1, line=dict(color="red", dash="dash")))
+    fig.add_shape(dict(type="line", x0=itNormalcy, x1=itNormalcy, y0=0, y1=1, line=dict(color="green", dash="dash")))
+    fig.add_shape(dict(type="line", x0=it1stCase, x1=it1stCase, y0=0, y1=1, line=dict(color="black", dash="dash")))
+
+    # Update layout
+    fig.update_layout(xaxis=dict(tickangle=90), legend=dict(title=dict(text='Country')), showlegend=True)
+
+    # Show the plot
+    fig.show()
+
+def one_plot_avg_px(dfs, title):
+    """
+    Plots multiple lineplots in one figure using the 'avg' column of each dataframe within the
+    structure dfs (with specific labeling).
+
+    """
+
+    # Region code of the different countries
+    lan = ['it', 'cs', 'ro', 'sv', 'fi', 'da']
+
+    # Name of the countries
+    countries = ['Italy', 'Serbia', 'Romania', 'Slovenia', 'Finland', 'Denmark']
+
+    itLockdown = '2020-03-01'
+    itNormalcy = '2020-07-01'
+    it1stCase = '2020-02-01'
+
+    dates = dfs['it']['Timestamp'].values.copy()
+    dates = pd.to_datetime(dates)
+
+    # Format to display only year-month-day
+    dates = dates.strftime('%Y-%m-%d')
+
+    fig = px.line()
+    for i, country in enumerate(countries):
+        fig.add_scatter(x=dates, y=dfs[lan[i]]['avg'].values, mode='lines', name=country)
+
+    # Adding vertical lines for interventions
+    # Adding vertical lines for interventions with labels
+    fig.add_shape(dict(type='line', x0=itLockdown, x1=itLockdown, y0=0, y1=1, xref='x', yref='paper',
+                       line=dict(color='red', dash='dash'), name='Lockdown'))
+    fig.add_annotation(x=itLockdown, y=1.1, xref='x', yref='paper',
+                       text='Lockdown', showarrow=False, xshift=10)
+
+    fig.add_shape(dict(type='line', x0=itNormalcy, x1=itNormalcy, y0=0, y1=1, xref='x', yref='paper',
+                       line=dict(color='green', dash='dash'), name='Normalcy'))
+    fig.add_annotation(x=itNormalcy, y=1.1, xref='x', yref='paper',
+                       text='Normalcy', showarrow=False)
+
+    fig.add_shape(dict(type='line', x0=it1stCase, x1=it1stCase, y0=0, y1=1, xref='x', yref='paper',
+                       line=dict(color='black', dash='dash'), name='1st Death'))
+    fig.add_annotation(x=it1stCase, y=1.1, xref='x', yref='paper',
+                       text='1st Death', showarrow=False, xshift=-20)
+
+    fig.update_layout(
+        xaxis=dict(tickangle=90),
+        xaxis_title='Dates (From 2019-01-01 to 2020-08-01)',
+        yaxis_title='Average Relative Percentage Change from Baseline',
+        title=title,
+        legend=dict(title='Country'),
+        showlegend=True
+    )
+
+    fig.show()
